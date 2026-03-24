@@ -247,17 +247,30 @@ FReply SWeaverDebugger::OnGenerateFromSelection()
 		ResultText->SetText(FText::FromString(TEXT("Error: Cannot access asset editor subsystem")));
 		return FReply::Handled();
 	}
-
-
+	
 	TArray<UObject*> EditedAssets = AssetEditorSubsystem->GetAllEditedAssets();
-	UBlueprint* CurrentBP = nullptr;
+	const UBlueprint* CurrentBP = nullptr;
+	const FBlueprintEditor* BlueprintEditor = nullptr;
 
 	for (UObject* Asset : EditedAssets)
 	{
 		if (UBlueprint* BP = Cast<UBlueprint>(Asset))
 		{
-			CurrentBP = BP;
-			break;
+			if (IAssetEditorInstance* Editor = AssetEditorSubsystem->FindEditorForAsset(BP, false))
+			{
+				FBlueprintEditor* BPEditor = static_cast<FBlueprintEditor*>(Editor);
+				if (BPEditor && BPEditor->GetSelectedNodes().Num() > 0)
+				{
+					CurrentBP = BP;
+					BlueprintEditor = BPEditor;
+					break;
+				}
+				if (!CurrentBP)
+				{
+					CurrentBP = BP;
+					BlueprintEditor = BPEditor;
+				}
+			}
 		}
 	}
 
@@ -267,9 +280,6 @@ FReply SWeaverDebugger::OnGenerateFromSelection()
 		return FReply::Handled();
 	}
 
-
-	FBlueprintEditor* BlueprintEditor = static_cast<FBlueprintEditor*>(AssetEditorSubsystem->FindEditorForAsset(
-		CurrentBP, false));
 	if (!BlueprintEditor)
 	{
 		ResultText->SetText(FText::FromString(TEXT("Error: Cannot access blueprint editor")));
