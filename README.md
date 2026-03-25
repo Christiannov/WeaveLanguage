@@ -46,25 +46,25 @@ set ...
 graphset MyActor2 /Game/MyActor2.MyActor2
 graph EventGraph
 
-node a : event.Actor.ReceiveBeginPlay @ (-144, 16)
-node b : special.Sequence @ (96, 16)
-node c : call.KismetSystemLibrary.PrintString @ (384, 16)
+node beginplay : event.Actor.ReceiveBeginPlay @ (-144, 16)
+node sequence : special.Sequence @ (96, 16)
+node print01 : call.KismetSystemLibrary.PrintString @ (384, 16)
 node d : call.KismetSystemLibrary.PrintString @ (384, 160)
 node e : call.KismetSystemLibrary.PrintString @ (384, 304)
 node f : call.KismetSystemLibrary.PrintString @ (384, 448)
 
-link a.then -> b.execute
-link b.then_0 -> c.execute
-link b.then_1 -> d.execute
-link b.then_2 -> e.execute
-link b.then_3 -> f.execute
+link beginplay.then -> sequence.execute
+link sequence.then_0 -> print01.execute
+link sequence.then_1 -> d.execute
+link sequence.then_2 -> e.execute
+link sequence.then_3 -> f.execute
 
-set c.WorldContextObject = self
-set c.InString = Print 1
-set c.bPrintToScreen = true
-set c.bPrintToLog = true
-set c.TextColor = (R=0.000000,G=0.660000,B=1.000000,A=1.000000)
-set c.Duration = 2.000000
+set print01.WorldContextObject = self
+set print01.InString = Print 1
+set print01.bPrintToScreen = true
+set print01.bPrintToLog = true
+set print01.TextColor = (R=0.000000,G=0.660000,B=1.000000,A=1.000000)
+set print01.Duration = 2.000000
 set d.WorldContextObject = self
 set d.InString = Print 2
 set d.bPrintToScreen = true
